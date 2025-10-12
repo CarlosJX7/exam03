@@ -2,34 +2,45 @@
 #include <string.h>
 #include <stdio.h>
 
-char *filter(char *input, char *word) {
-	size_t word_len = strlen(word);
-	char *stars = malloc(word_len + 1);
-	memset(stars, '*', word_len);
-	stars[word_len] = '\0';
-	size_t input_len = strlen(input);
-	char *result = malloc(input_len + 1);
-	char *dest = result;
-	char *src = input;
-	while (*src) {
-		if (strncmp(src, word, word_len) == 0) {
-			strcpy(dest, stars);
-			dest += word_len;
-			src += word_len;
-		} else {
-			*dest++ = *src++;
+int filter(char *cadena, char *word) 
+{
+	int i = 0;
+	int j = 0;
+	int ret = 0;
+	while (cadena[i])
+	{
+		if (cadena[i] != word[j])
+		{
+			j = 0;
 		}
+		if (cadena[i] == word[j])
+		{
+			if (j == strlen(word) - 1)
+			{
+				ret = 1;
+				printf("Econtrada la palabra: >%s<\n", word);
+				j = 0;
+			}
+			j++;
+		}
+		i++;
 	}
-	*dest = '\0';
-	free(stars);
-	return result;
+	return ret;
 }
 
-int main(int argc, char **argv) {
-	if (argc > 2) {
-		char *result = filter(argv[1], argv[2]);
-		printf("%s\n", result);
-		free(result);
+int main(int argc, char **argv)
+{
+	if (argc != 3)
+	{
+		printf("Error en los argumentos\n");
+		return 1;
 	}
+	char *cadena = argv[1];
+	char *word = argv[2];
+	if (!filter(cadena, word))
+	{
+		printf("No se ha encontrado la palabra: >%s<\n", word);
+	}
+
 	return 0;
 }
